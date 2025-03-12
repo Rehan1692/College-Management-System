@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - College Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .dashboard-wrapper {
+            padding-top: 60px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .dashboard-stat {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .progress {
+            height: 20px;
+        }
+        .progress-bar {
+            background-color: #007bff;
+        }
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 0;
+        }
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+        .navbar {
+            background-color: #343a40 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link.active {
+            color: #007bff !important;
+        }
+    </style>
+</head>
+<body class="dashboard-wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Student Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html">My Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="attendance.html">Attendance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assignments.html">Assignments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="grades.html">Grades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../shared/notices.html">Notices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../shared/messages.html">Messages</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="navbar-text me-3 text-white" id="studentName"></span>
+                    <button class="btn btn-outline-light" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Stats Cards -->
+            <div class="col-md-3 mb-4">
+                <div class="dashboard-stat">
+                    <h5>Attendance</h5>
+                    <h2 id="attendancePercentage">0%</h2>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="dashboard-stat">
+                    <h5>CGPA</h5>
+                    <h2 id="cgpaValue">0.00</h2>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="dashboard-stat">
+                    <h5>Courses</h5>
+                    <h2 id="coursesCount">0</h2>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="dashboard-stat">
+                    <h5>Pending Tasks</h5>
+                    <h2 id="pendingTasks">0</h2>
+                </div>
+            </div>
+
+            <!-- Course Overview -->
+            <div class="col-md-8 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Course Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="coursesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Course Code</th>
+                                        <th>Course Name</th>
+                                        <th>Instructor</th>
+                                        <th>Progress</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="col-md-4 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Recent Activities</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group" id="activitiesList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="col-md-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Upcoming Deadlines</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group" id="deadlinesList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notice Board -->
+            <div class="col-md-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Notice Board</h5>
+                        <div>
+                            <button id="refreshNoticesBtn" class="btn btn-sm btn-outline-secondary me-2" title="Refresh Notices">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                            <a href="../shared/notices.html" class="btn btn-sm btn-outline-primary">View All</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group" id="noticesList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/data-service.js"></script>
+    <script src="../js/student-dashboard.js"></script>
+    <script src="../js/notice-debug.js"></script>
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const accessToken = localStorage.getItem('accessToken');
+            const userType = localStorage.getItem('userType');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+            // Redirect if not logged in or not a student
+            if (!accessToken || userType !== 'student') {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            // Display student name
+            const studentName = document.getElementById('studentName');
+            if (studentName && userData.full_name) {
+                studentName.textContent = `Welcome, ${userData.full_name}`;
+            }
+
+            // Load dashboard content
+            loadDashboardContent();
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('userType');
+            localStorage.removeItem('userData');
+            window.location.href = '../login.html';
+        }
+
+        // Load dashboard content
+        function loadDashboardContent() {
+            const dashboardContent = document.getElementById('dashboardContent');
+            // Add your dashboard content loading logic here
+        }
+    </script>
+</body>
+</html> 

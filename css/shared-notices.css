@@ -1,0 +1,112 @@
+/**
+ * Shared Notices CSS
+ * Styles for the shared notices page
+ */
+
+/* Notice Card Styles */
+.notice-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 5px solid #ccc;
+    height: 100%;
+}
+
+.notice-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+/* Priority Colors */
+.notice-card.priority-high {
+    border-left-color: #dc3545;
+}
+
+.notice-card.priority-medium {
+    border-left-color: #ffc107;
+}
+
+.notice-card.priority-low {
+    border-left-color: #17a2b8;
+}
+
+/* Card Header */
+.notice-card .card-header {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/* Card Title */
+.notice-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Card Text */
+.notice-card .card-text {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Filter Section */
+.filter-section {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Notice Detail Modal */
+.notice-detail-modal .modal-header {
+    border-bottom: 3px solid #007bff;
+}
+
+.notice-detail-modal .notice-meta {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.notice-detail-modal .notice-content {
+    white-space: pre-line;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6;
+    min-height: 150px;
+}
+
+.notice-detail-modal .notice-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Create Notice Modal */
+.create-notice-modal .modal-header {
+    background-color: #f8f9fa;
+}
+
+.create-notice-modal .form-label {
+    font-weight: 500;
+}
+
+.create-notice-modal .form-text {
+    font-size: 0.8rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .filter-section {
+        padding: 0.75rem;
+    }
+    
+    .notice-card .card-title {
+        font-size: 1rem;
+    }
+    
+    .notice-detail-modal .notice-content {
+        min-height: 100px;
+    }
+} 

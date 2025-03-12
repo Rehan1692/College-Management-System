@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades Management - College Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        .dashboard-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: #3a0ca3;
+        }
+        .navbar-brand, .nav-link {
+            color: white;
+        }
+        .nav-link:hover {
+            color: rgba(255,255,255,0.8);
+        }
+        .active-nav {
+            border-bottom: 2px solid white;
+        }
+        .stats-card {
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .grades-table th, .grades-table td {
+            vertical-align: middle;
+        }
+        .grades-filters {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .grades-summary {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .grade-distribution {
+            height: 150px;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .container {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top no-print">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="bi bi-mortarboard-fill me-2"></i>College Management System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="attendance.html">Attendance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="assignments.html">Assignments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active-nav" href="grades.html">Grades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="notices.html">Notices</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i><span id="facultyName">Faculty</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="simpleLogout()"><i class="bi bi-box-arrow-right me-2"></i>Simple Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Container for System Messages -->
+    <div class="container mt-5 pt-3 no-print">
+        <div id="alertContainer"></div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+            <h2><i class="bi bi-bar-chart-line me-2"></i>Grades Management</h2>
+            <div>
+                <button class="btn btn-outline-primary me-2" id="exportGradesBtn">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i>Export CSV
+                </button>
+                <button class="btn btn-outline-secondary" id="printGradesBtn">
+                    <i class="bi bi-printer me-1"></i>Print
+                </button>
+            </div>
+        </div>
+
+        <!-- Grades Filters -->
+        <div class="grades-filters no-print">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="courseFilter" class="form-label">Course</label>
+                    <select class="form-select" id="courseFilter">
+                        <option value="">All Courses</option>
+                        <!-- Courses will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="gradeFilter" class="form-label">Grade</label>
+                    <select class="form-select" id="gradeFilter">
+                        <option value="">All Grades</option>
+                        <option value="A+">A+</option>
+                        <option value="A">A</option>
+                        <option value="B+">B+</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="searchInput" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search by student name...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades Summary -->
+        <div class="grades-summary mb-4">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card bg-primary text-white">
+                        <h3 id="totalStudentsCount">0</h3>
+                        <p class="mb-0">Total Students</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card bg-success text-white">
+                        <h3 id="passCount">0</h3>
+                        <p class="mb-0">Passed</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card bg-danger text-white">
+                        <h3 id="failCount">0</h3>
+                        <p class="mb-0">Failed</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card bg-info text-white">
+                        <h3 id="passPercentage">0%</h3>
+                        <p class="mb-0">Pass Rate</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grade Distribution -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h5>Grade Distribution</h5>
+                    <div class="grade-distribution d-flex align-items-end mt-3">
+                        <div class="d-flex flex-column align-items-center me-4" style="width: 60px;">
+                            <div class="bg-success" style="width: 100%; height: 0;" id="aGradeBar"></div>
+                            <div class="mt-2">A/A+</div>
+                            <div id="aCount">0</div>
+                        </div>
+                        <div class="d-flex flex-column align-items-center me-4" style="width: 60px;">
+                            <div class="bg-primary" style="width: 100%; height: 0;" id="bGradeBar"></div>
+                            <div class="mt-2">B/B+</div>
+                            <div id="bCount">0</div>
+                        </div>
+                        <div class="d-flex flex-column align-items-center me-4" style="width: 60px;">
+                            <div class="bg-warning" style="width: 100%; height: 0;" id="cGradeBar"></div>
+                            <div class="mt-2">C</div>
+                            <div id="cCount">0</div>
+                        </div>
+                        <div class="d-flex flex-column align-items-center me-4" style="width: 60px;">
+                            <div class="bg-warning" style="width: 100%; height: 0;" id="dGradeBar"></div>
+                            <div class="mt-2">D</div>
+                            <div id="dCount">0</div>
+                        </div>
+                        <div class="d-flex flex-column align-items-center" style="width: 60px;">
+                            <div class="bg-danger" style="width: 100%; height: 0;" id="fGradeBar"></div>
+                            <div class="mt-2">F</div>
+                            <div id="fCount">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades Table -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Student Grades</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover grades-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Total Marks</th>
+                                <th>Max Marks</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th class="no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gradesTableBody">
+                            <!-- Grades will be populated dynamically -->
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <p class="mt-2">Loading grades data...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Grades Modal -->
+    <div class="modal fade" id="studentGradesModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studentGradesModalTitle">Student Grades</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>Student Name:</strong> <span id="studentGradesName"></span></p>
+                            <p><strong>Email:</strong> <span id="studentGradesEmail"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Course:</strong> <span id="studentGradesCourse"></span></p>
+                        </div>
+                    </div>
+                    
+                    <h6>Assignment Grades</h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Assignment</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Marks</th>
+                                    <th>Max Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentAssignmentsTableBody">
+                                <!-- Assignments will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Grade Summary</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p><strong>Total Marks:</strong> <span id="studentGradesTotalMarks"></span></p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p><strong>Max Marks:</strong> <span id="studentGradesMaxMarks"></span></p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p><strong>Percentage:</strong> <span id="studentGradesPercentage"></span></p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p><strong>Final Grade:</strong> <span id="studentGradesFinalGrade" class="badge bg-success"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Grade Modal -->
+    <div class="modal fade" id="editGradeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editGradeModalTitle">Edit Grade</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editGradeForm">
+                        <input type="hidden" id="editGradeStudentId">
+                        <input type="hidden" id="editGradeCourseId">
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editGradeStudentName" class="form-label">Student</label>
+                                <input type="text" class="form-control" id="editGradeStudentName" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editGradeCourse" class="form-label">Course</label>
+                                <input type="text" class="form-control" id="editGradeCourse" readonly>
+                            </div>
+                        </div>
+                        
+                        <h6>Assignment Grades</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Assignment</th>
+                                        <th>Max Marks</th>
+                                        <th>Marks</th>
+                                        <th>Feedback</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editGradeAssignmentsTableBody">
+                                    <!-- Assignments will be populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveGradesBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/data-service.js"></script>
+    <script src="../js/faculty-grades.js"></script>
+    <script src="../js/simple-logout.js"></script>
+    
+    <script>
+        // Initialize grade distribution bars
+        document.addEventListener('DOMContentLoaded', () => {
+            // This will be handled by the faculty-grades.js file
+            // Just adding this script to ensure the bars are updated after the data is loaded
+        });
+    </script>
+</body>
+</html> 

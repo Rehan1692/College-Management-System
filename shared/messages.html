@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - College Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/shared-messages.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" id="dashboardLink">College Management System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="homeLink">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Collaboration
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item active" href="#">Messages</a></li>
+                            <li><a class="dropdown-item" href="../shared/notices.html">Notices</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> <span id="userName">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="profileLink">Profile</a></li>
+                            <li><a class="dropdown-item" href="#" id="settingsLink">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- System Messages -->
+    <div class="container mt-3">
+        <div id="alertContainer"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <h2 class="mb-4">Messages</h2>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Message List -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="inbox-tab" data-bs-toggle="tab" data-bs-target="#inbox" type="button" role="tab">Inbox</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button" role="tab">Sent</button>
+                        </li>
+                    </ul>
+                    <button id="composeBtn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-pen me-1"></i> Compose
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="inbox" role="tabpanel">
+                        <div class="message-list" id="inboxList">
+                            <div class="d-flex justify-content-center align-items-center p-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="sent" role="tabpanel">
+                        <div class="message-list" id="sentList">
+                            <div class="d-flex justify-content-center align-items-center p-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <!-- Initial State -->
+                <div id="initialState" class="initial-state">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Select a message to view</h4>
+                    <p>Or click the Compose button to create a new message</p>
+                </div>
+                
+                <!-- Message Detail -->
+                <div id="messageDetail" class="message-detail" style="display: none;">
+                    <div class="message-header">
+                        <h3 id="messageSubject">Message Subject</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>From:</strong> <span id="messageFrom">Sender Name</span></p>
+                                <p><strong>To:</strong> <span id="messageTo">Recipient Name</span></p>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <p id="messageDate">Date and Time</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-content" id="messageContent">
+                        Message content will appear here.
+                    </div>
+                    <div class="message-actions">
+                        <button id="replyBtn" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-reply me-1"></i> Reply
+                        </button>
+                        <button id="deleteBtn" class="btn btn-outline-danger">
+                            <i class="fas fa-trash me-1"></i> Delete
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Compose Message -->
+                <div id="composeView" class="compose-form" style="display: none;">
+                    <h3>Compose Message</h3>
+                    <form id="composeForm">
+                        <div class="mb-3">
+                            <label for="recipientSelect" class="form-label">To:</label>
+                            <select class="form-select" id="recipientSelect" required>
+                                <option value="">Select Recipient</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="messageSubjectInput" class="form-label">Subject:</label>
+                            <input type="text" class="form-control" id="messageSubjectInput" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="messageContentInput" class="form-label">Message:</label>
+                            <textarea class="form-control" id="messageContentInput" required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" id="cancelComposeBtn" class="btn btn-secondary me-2">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Utility Scripts -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/data-service.js"></script>
+    <script src="../js/notification-service.js"></script>
+    <script src="../js/messaging-service.js"></script>
+    <!-- Page Script -->
+    <script src="../js/shared-messages.js"></script>
+</body>
+</html> 

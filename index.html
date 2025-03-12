@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Management System</title>
+    <meta http-equiv="refresh" content="2;url=login.html">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #800000;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-right: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="message">Redirecting to login page...</div>
+    
+    <script>
+        // Clear any existing authentication data
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('userData');
+        
+        // Redirect to login page after a short delay
+        setTimeout(function() {
+            window.location.replace('login.html');
+        }, 1500);
+    </script>
+</body>
+</html> 
