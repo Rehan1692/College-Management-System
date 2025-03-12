@@ -64,4 +64,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - Bootstrap for the responsive UI components
 - FontAwesome for the icons
-- The open-source community for inspiration and resources 
+- The open-source community for inspiration and resources
